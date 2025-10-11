@@ -63,26 +63,18 @@ VK.Observer.subscribe("widgets.comments.delete_comment", function f() {
 });
 
 
-
+VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment, date, sign) {
+    console.log('Добавлен новый комментарий!');
+    console.log('Количество комментариев:', num);
+    console.log('Текст комментария:', last_comment);
+    console.log('Дата:', date);
+    console.log('Подпись:', sign);
+    
+    // Пример использования текста комментария
+    //alert('Новый комментарий: ' + last_comment);
+});
 	
-// Пример с использованием VK API
-function checkNewComments() {
-    // Используйте API для получения комментариев
-    // https://vk.com/dev/widgets.getComments
-    VK.Api.call('widgets.getComments', {
-        widget_api_id: 54230573,
-        url: window.location.href,
-        v: '5.131'
-    }, function(r) {
-        if(r.response) {
-            // Обрабатываем последние комментарии
-            console.log('Последние комментарии:', r.response);
-        } else console.log('No');
-    });
-}
 
-// Проверяем каждые 30 секунд
-setInterval(checkNewComments, 30000);
 
 
 	
@@ -94,5 +86,6 @@ setInterval(checkNewComments, 30000);
 </body>
 
 </html>
+
 
 
