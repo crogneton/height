@@ -39,9 +39,29 @@ vkBridge.send('VKWebAppInit');
 <div id='main_pic' class='' style='margin: 0px 0px 0px 0px; background: url(Flux_Dev_a_cinematic_anime_keyframe_with_a_mix_of_styles_from__1.jpg), #000; background-size:100% 100%; padding: 0px; box-sizing:border-box; position:relative; height: 720px; width: 100%; z-index:2; '></div>
 
 	
-	
+<!-- Put this script tag to the <head> of your page -->
+<script type="text/javascript" src="https://vk.com/js/api/openapi.js?168"></script>
+<script type="text/javascript">
+  VK.init({ apiId: 54230573, onlyWidgets: true });
+</script>
 
+<!-- Put this div tag to the place, where the Comments block will be -->
+<div id="vk_comments"></div>
+<script type="text/javascript">
+  VK.Widgets.Comments("vk_comments", {limit: 10, attach: "*"});
+</script>
 
+<script>
+// Новый комментарий добавлен
+VK.Observer.subscribe("widgets.comments.new_comment", function f() {
+    console.log('Добавлен новый комментарий!');
+});
+
+// Комментарий удален
+VK.Observer.subscribe("widgets.comments.delete_comment", function f() {
+    console.log('Комментарий удален!');
+});
+</script>
 
 
 
@@ -49,3 +69,4 @@ vkBridge.send('VKWebAppInit');
 </body>
 
 </html>
+
