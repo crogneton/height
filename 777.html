@@ -30,7 +30,7 @@ vkBridge.send('VKWebAppInit');
 
 
 
-<div id='main' style='padding: 0px 0px 0px 0px; background:#000; width:360px; overflow:hidden;'>
+<div id='main' style='padding: 0px 0px 0px 0px; background:#000; width:360px; overflow:;'>
 <div id='content' style='position:relative; padding: 0px 0px 0px 0px;'>
 
 
@@ -53,43 +53,17 @@ VK.Widgets.Comments("vk_comments", {limit: 5, attach: "false",}, 11111);
 </script>
 
 <script>
-
-
-// Комментарий удален
 VK.Observer.subscribe("widgets.comments.delete_comment", function f() {
     console.log('Комментарий удален!');
 });
-
-
+	
 VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment, date, sign) {
     console.log('Добавлен новый комментарий!');
     console.log('Количество комментариев:', num);
     console.log('Текст комментария:', last_comment);
     console.log('Дата:', date);
     console.log('Подпись:', sign);
-    
-    // Пример использования текста комментария
-    //alert('Новый комментарий: ' + last_comment);
 });
-	
-
-VK.Observer.subscribe("widgets.comments.error", function(error) {
-    console.error('Произошла ошибка:', error);
-    
-    // Типы ошибок могут быть разными
-    switch(error.type) {
-        case 'post':
-            console.log('Ошибка отправки комментария');
-            break;
-        case 'load':
-            console.log('Ошибка загрузки комментариев');
-            break;
-        default:
-            console.log('Неизвестная ошибка');
-    }
-});
-
-	
 </script>
 
 
@@ -98,6 +72,7 @@ VK.Observer.subscribe("widgets.comments.error", function(error) {
 </body>
 
 </html>
+
 
 
 
