@@ -70,21 +70,229 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 
 
 
-// Перехватываем ошибки в глобальном обработчике
-window.addEventListener('error', function(event) {
-  const msg = event.message || '';
-  if (msg.includes('Notify error: newCnt is not defined')) {
-    alert(12345);
+class VKIframeMonitor {
+  constructor() {
+    this.iframes = new Map();
+    this.errorCounts = new Map();
+    this.init();
   }
-});
+  
+  init() {
+    // 1. Отслеживаем существующие iframe
+    this.scanExistingIframes();
+    
+    // 2. Наблюдаем за новыми iframe
+    this.setupMutationObserver();
+    
+    // 3. Настраиваем перехват ошибок
+    this.setupErrorHandling();
+    
+    console.log('VK Iframe Monitor запущен');
+  }
+  
+  scanExistingIframes() {
+    const iframes = document.querySelectorAll('iframe[src*="widget_comments.php"]');
+    iframes.forEach((iframe, index) => {
+      this.registerIframe(iframe);
+    });
+  }
+  
+  registerIframe(iframe) {
+    try {
+      const url = new URL(iframe.src);
+      const page = url.searchParams.get('page');
+      
+      if (!page) return;
+      
+      // Создаем уникальный ID
+      const iframeId = `vk_${page}_${Date.now()}`;
+      
+      // Добавляем атрибуты для идентификации
+      iframe.dataset.vkMonitorId = iframeId;
+      iframe.dataset.vkPage = page;
+      iframe.dataset.vkApp = url.searchParams.get('app') || 'unknown';
+      
+      // Добавляем стиль для визуальной идентификации
+      iframe.style.border = '2px solid #4CAF50';
+      iframe.style.boxSizing = 'border-box';
+      
+      // Создаем контейнер для информации
+      const infoDiv = document.createElement('div');
+      infoDiv.className = 'vk-iframe-info';
+      infoDiv.innerHTML = `
+        <div style="background:#f0f0f0; padding:5px; font-size:12px; border:1px solid #ccc">
+          VK Iframe: page=${page}, ID=${iframeId}
+          <button onclick="document.querySelector('[data-vk-monitor-id=\"${iframeId}\"]').style.border='2px solid red'">
+            Показать
+          </button>
+        </div>
+      `;
+      
+      iframe.parentNode.insertBefore(infoDiv, iframe);
+      
+      // Сохраняем в карту
+      this.iframes.set(iframeId, {
+        element: iframe,
+        page: page,
+        url: iframe.src,
+        errors: [],
+        errorCount: 0
+      });
+      
+      console.log(`Зарегистрирован iframe: ID=${iframeId}, page=${page}`);
+      
+    } catch (e) {
+      console.warn('Ошибка регистрации iframe:', e);
+    }
+  }
+  
+  setupMutationObserver() {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        mutation.addedNodes.forEach((node) => {
+          if (node.tagName === 'IFRAME') {
+            setTimeout(() => {
+              if (node.src && node.src.includes('widget_comments.php')) {
+                this.registerIframe(node);
+              }
+            }, 100);
+          }
+        });
+      });
+    });
+    
+    observer.observe(document.body, { childList: true, subtree: true });
+  }
+  
+  setupErrorHandling() {
+    // Глобальный перехват ошибок
+    const originalError = console.error;
+    console.error = (...args) => {
+      originalError.apply(console, args);
+      
+      // Пытаемся определить источник ошибки
+      const errorStack = new Error().stack;
+      if (errorStack && args.some(arg => 
+        typeof arg === 'string' && 
+        arg.includes('newCnt is not defined')
+      )) {
+        this.handleVKError(args, errorStack);
+      }
+    };
+  }
+  
+  handleVKError(errorArgs, stack) {
+    // Анализируем стек вызовов для определения iframe
+    const stackLines = stack.split('\n');
+    
+    // Ищем в стеке упоминания widget_comments.php
+    for (const line of stackLines) {
+      for (const [iframeId, data] of this.iframes.entries()) {
+        if (line.includes('widget_comments.php') && line.includes(`page=${data.page}`)) {
+          data.errorCount++;
+          data.errors.push({
+            message: errorArgs.join(' '),
+            timestamp: new Date().toISOString(),
+            stack: stack
+          });
+          
+          console.log(`⚠️ Ошибка VK обнаружена!`);
+          console.log(`   Iframe ID: ${iframeId}`);
+          console.log(`   Page: ${data.page}`);
+          console.log(`   Ошибок всего: ${data.errorCount}`);
+          console.log(`   URL: ${data.url}`);
+          
+          // Визуально выделяем iframe с ошибкой
+          data.element.style.border = '3px solid #FF5722';
+          data.element.style.boxShadow = '0 0 10px rgba(255, 87, 34, 0.5)';
+          
+          // Создаем всплывающее уведомление
+          this.showNotification(`Ошибка в iframe page=${data.page}`, iframeId);
+          
+          return;
+        }
+      }
+    }
+    
+    console.log('Ошибка VK, но iframe не определен:', errorArgs);
+  }
+  
+  showNotification(message, iframeId) {
+    const notification = document.createElement('div');
+    notification.style.cssText = `
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #FF5722;
+      color: white;
+      padding: 15px;
+      border-radius: 5px;
+      z-index: 9999;
+      max-width: 300px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      cursor: pointer;
+    `;
+    
+    notification.innerHTML = `
+      <strong>VK Error Detected</strong><br>
+      ${message}<br>
+      <small>Click to highlight iframe</small>
+    `;
+    
+    notification.onclick = () => {
+      const iframe = this.iframes.get(iframeId)?.element;
+      if (iframe) {
+        iframe.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        iframe.style.border = '4px solid #FF9800';
+        setTimeout(() => {
+          iframe.style.border = '3px solid #FF5722';
+        }, 2000);
+      }
+      notification.remove();
+    };
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      if (notification.parentNode) {
+        notification.remove();
+      }
+    }, 5000);
+  }
+  
+  // Методы для получения статистики
+  getStats() {
+    const stats = {};
+    for (const [id, data] of this.iframes.entries()) {
+      stats[id] = {
+        page: data.page,
+        errorCount: data.errorCount,
+        lastError: data.errors.length > 0 ? data.errors[data.errors.length - 1] : null,
+        url: data.url
+      };
+    }
+    return stats;
+  }
+  
+  getIframeByPage(page) {
+    for (const [id, data] of this.iframes.entries()) {
+      if (data.page === page) {
+        return { id, ...data };
+      }
+    }
+    return null;
+  }
+}
 
-// Перехватываем необработанные Rejection (для промисов)
-window.addEventListener('unhandledrejection', function(event) {
-  const reason = event.reason && (event.reason.message || String(event.reason)) || '';
-  if (reason.includes('Notify error: newCnt is not defined')) {
-    alert(12345);
-  }
-});
+// Инициализация
+const vkMonitor = new VKIframeMonitor();
+
+// Для отладки - выводим все iframe каждые 5 секунд
+setInterval(() => {
+  const stats = vkMonitor.getStats();
+  console.log('=== VK Iframe Monitor Stats ===');
+  console.table(Object.values(stats));
+}, 5000);
 
 
 
@@ -101,6 +309,7 @@ window.addEventListener('unhandledrejection', function(event) {
 </body>
 
 </html>
+
 
 
 
