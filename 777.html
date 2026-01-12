@@ -63,6 +63,50 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
     console.log('Дата:', date);
     console.log('Подпись:', sign);
 });
+
+
+
+
+
+
+
+// Простой перехватчик для ошибок с newCnt
+(function() {
+  const originalError = console.error;
+  
+  console.error = function(...args) {
+    // Вызываем оригинальный метод
+    originalError.apply(this, args);
+    
+    // Проверяем наличие нужной ошибки
+    const errorText = args[0];
+    if (typeof errorText === 'string' && 
+        errorText.includes('VK error: Notify error: newCnt is not defined')) {
+      
+      // Извлекаем page из URL
+      const urlParams = new URLSearchParams(window.location.search);
+      const page = urlParams.get('page');
+      
+      if (page) {
+        console.log(`[VK Error Monitor] Обнаружена ошибка newCnt для page=${page}`);
+        console.log(`[VK Error Monitor] Полный URL: ${window.location.href}`);
+      }
+    }
+  };
+  
+  // Логируем текущий page при загрузке
+  const urlParams = new URLSearchParams(window.location.search);
+  const initialPage = urlParams.get('page');
+  if (initialPage) {
+    console.log(`[VK Error Monitor] Инициализирован для page=${initialPage}`);
+  }
+})();
+
+
+
+
+
+	
 </script>
 
 
@@ -71,6 +115,7 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 </body>
 
 </html>
+
 
 
 
