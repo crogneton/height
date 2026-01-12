@@ -74,33 +74,22 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 (function() {
   const originalError = console.error;
   
-  console.error = function(...args) {
-    // Вызываем оригинальный метод
-    originalError.apply(this, args);
-    
-    // Проверяем наличие нужной ошибки
-    const errorText = args[0];
-    if (typeof errorText === 'string' && 
-        errorText.includes('VK error: Notify error: newCnt is not defined')) {
-      
-      // Извлекаем page из URL
-      const urlParams = new URLSearchParams(window.location.search);
-      const page = urlParams.get('page');
-      
-      if (page) {
-        console.log(`[VK Error Monitor] Обнаружена ошибка newCnt для page=${page}`);
-        console.log(`[VK Error Monitor] Полный URL: ${window.location.href}`);
-      }
-    }
-  };
-  
-  // Логируем текущий page при загрузке
-  const urlParams = new URLSearchParams(window.location.search);
-  const initialPage = urlParams.get('page');
-  if (initialPage) {
-    console.log(`[VK Error Monitor] Инициализирован для page=${initialPage}`);
+// Перехватываем ошибки в глобальном обработчике
+window.addEventListener('error', function(event) {
+  const msg = event.message || '';
+  if (msg.includes('Notify error: newCnt is not defined')) {
+    alert(12345);
   }
-})();
+});
+
+// Перехватываем необработанные Rejection (для промисов)
+window.addEventListener('unhandledrejection', function(event) {
+  const reason = event.reason && (event.reason.message || String(event.reason)) || '';
+  if (reason.includes('Notify error: newCnt is not defined')) {
+    alert(12345);
+  }
+});
+
 
 
 
@@ -115,6 +104,7 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 </body>
 
 </html>
+
 
 
 
