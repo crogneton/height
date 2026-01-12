@@ -49,23 +49,9 @@ vkBridge.send('VKWebAppInit');
 <div id="vk_comments"></div>
 <script type="text/javascript">
 VK.Widgets.Comments("vk_comments", {
-    redesign: 1,
-    limit: 4,
+
+    limit: 6,
     attach: "*",
-    autoPublish: 0,
-    onAttachComment: function(comment, success) {
-        if (!success) {
-            console.error('Ошибка прикрепления комментария');
-        }
-    },
-    onPostComment: function(comment, success) {
-        if (!success) {
-            console.error('Ошибка отправки комментария');
-            // Здесь можно показать пользователю сообщение
-        } else {
-            console.log('Комментарий успешно отправлен');
-        }
-    }
 }, 12345);
 </script>
 
@@ -93,7 +79,15 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 });
 	
 
-
+VK.Observer.subscribe("widgets.comments.error", function(error) {
+    console.error('Ошибка при отправке комментария:', error);
+    
+    // error содержит информацию об ошибке
+    if (error.type === 'post') {
+        console.log('Не удалось отправить комментарий');
+        
+    }
+});
 
 	
 </script>
@@ -104,6 +98,7 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 </body>
 
 </html>
+
 
 
 
