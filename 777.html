@@ -48,7 +48,16 @@ vkBridge.send('VKWebAppInit');
 <!-- Put this div tag to the place, where the Comments block will be -->
 <div id="vk_comments"></div>
 <script type="text/javascript">
-  VK.Widgets.Comments("vk_comments", {limit: 10, attach: "*",
+VK.Widgets.Comments("vk_comments", {
+    redesign: 1,
+    limit: 4,
+    attach: "*",
+    autoPublish: 0,
+    onAttachComment: function(comment, success) {
+        if (!success) {
+            console.error('Ошибка прикрепления комментария');
+        }
+    },
     onPostComment: function(comment, success) {
         if (!success) {
             console.error('Ошибка отправки комментария');
@@ -95,6 +104,7 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 </body>
 
 </html>
+
 
 
 
