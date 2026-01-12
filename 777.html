@@ -80,12 +80,18 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 	
 
 VK.Observer.subscribe("widgets.comments.error", function(error) {
-    console.error('Ошибка при отправке комментария:', error);
+    console.error('Произошла ошибка:', error);
     
-    // error содержит информацию об ошибке
-    if (error.type === 'post') {
-        console.log('Не удалось отправить комментарий');
-        
+    // Типы ошибок могут быть разными
+    switch(error.type) {
+        case 'post':
+            console.log('Ошибка отправки комментария');
+            break;
+        case 'load':
+            console.log('Ошибка загрузки комментариев');
+            break;
+        default:
+            console.log('Неизвестная ошибка');
     }
 });
 
@@ -98,6 +104,7 @@ VK.Observer.subscribe("widgets.comments.error", function(error) {
 </body>
 
 </html>
+
 
 
 
