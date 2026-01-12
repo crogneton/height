@@ -56,10 +56,7 @@ VK.Widgets.Comments("vk_comments", {
 </script>
 
 <script>
-// Новый комментарий добавлен
-VK.Observer.subscribe("widgets.comments.new_comment", function f() {
-    console.log('Добавлен новый комментарий!');
-});
+
 
 // Комментарий удален
 VK.Observer.subscribe("widgets.comments.delete_comment", function f() {
@@ -104,6 +101,7 @@ VK.Observer.subscribe("widgets.comments.error", function(error) {
 </body>
 
 </html>
+
 
 
 
