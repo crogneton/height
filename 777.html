@@ -70,10 +70,6 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 
 
 
-// Простой перехватчик для ошибок с newCnt
-(function() {
-  const originalError = console.error;
-  
 // Перехватываем ошибки в глобальном обработчике
 window.addEventListener('error', function(event) {
   const msg = event.message || '';
@@ -95,6 +91,7 @@ window.addEventListener('unhandledrejection', function(event) {
 
 
 
+
 	
 </script>
 
@@ -104,6 +101,7 @@ window.addEventListener('unhandledrejection', function(event) {
 </body>
 
 </html>
+
 
 
 
