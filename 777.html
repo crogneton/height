@@ -35,7 +35,7 @@ vkBridge.send('VKWebAppInit');
 
 
 <!-- <iframe src="iframe.html" width="360" "></iframe> -->
-<iframe src="https://domain.s3-website.cloud.ru/index.html" width="600" height="600"></iframe>
+<!-- <iframe src="https://domain.s3-website.cloud.ru/index.html" width="600" height="600"></iframe> -->
 
 <div id='main_pic' class='' style='margin: 0px 0px 0px 0px; background: url(Flux_Dev_a_cinematic_anime_keyframe_with_a_mix_of_styles_from__1.jpg), #000; background-size:100% 100%; padding: 0px; box-sizing:border-box; position:relative; height: 720px; height: 70px; width: 100%; z-index:2; '></div>
 
@@ -71,7 +71,16 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 
 
 
-
+bridge.send("VKWebAppCallAPIMethod", {
+  method: "execute.a",
+  params: {
+    ПАРАМЕТР-1: "ЗНАЧЕНИЕ-1",
+    ПАРАМЕТР-2: "ЗНАЧЕНИЕ-2",
+    v: "5.199", // Например, "5.134"
+    func_v: "Версия 1", // Например, "Версия 1"
+    access_token: "КЛЮЧ-ДОСТУПА"
+  }
+});
 
 
 
@@ -86,6 +95,7 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 </body>
 
 </html>
+
 
 
 
