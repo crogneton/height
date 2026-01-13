@@ -86,24 +86,14 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 
 vkBridge.send('VKWebAppGetAuthToken', { app_id: 54230573, scope: '' })
 .then( (data) => { 
-    if (data.access_token) { 
-        //console.log("Получен ключ " + data.access_token); 
+    if (data.access_token) {  
         console.log("Получен ключ:", data);
         var key = data.access_token;
 
-
-// Получаем текущее время в Unix timestamp (в секундах)
-var currentUnixTime = Math.floor(Date.now() / 1000);
-
-// Вычисляем разницу в секундах
-var timeDifference = data.expires - currentUnixTime;
-
-// Преобразуем разницу в минуты (округляем в меньшую сторону)
-var minutesDifference = Math.floor(timeDifference / 60);
-
-console.log('Текущее Unix время:', currentUnixTime);
-console.log('Разница в секундах:', timeDifference);
-console.log('Разница в минутах:', minutesDifference);
+		var currentUnixTime = Math.floor(Date.now() / 1000); // Получаем текущее время в Unix timestamp (в секундах)
+		var timeDifference = data.expires - currentUnixTime; // Вычисляем разницу в секундах
+		var minutesDifference = Math.floor(timeDifference / 60); // Преобразуем разницу в минуты (округляем в меньшую сторону)
+		console.log('Ключ выдан на минут:', minutesDifference);
 
         // Метод users.get
         vkBridge.send('VKWebAppCallAPIMethod', { 
@@ -165,6 +155,7 @@ console.log('Разница в минутах:', minutesDifference);
 </body>
 
 </html>
+
 
 
 
