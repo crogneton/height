@@ -85,7 +85,7 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 
 
 
-bridge.send('VKWebAppGetAuthToken', { 
+vkBridge.send('VKWebAppGetAuthToken', { 
   app_id: 54230573, 
   scope: 'friends,status'
   })
@@ -129,6 +129,7 @@ bridge.send("VKWebAppCallAPIMethod", {
 </body>
 
 </html>
+
 
 
 
