@@ -84,7 +84,7 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 
 
 
-vkBridge.send('VKWebAppGetAuthToken', { app_id: 54230573, scope: 'friends,status' })
+vkBridge.send('VKWebAppGetAuthToken', { app_id: 54230573, scope: 'friends,status,docs' })
 .then( (data) => { 
     if (data.access_token) { 
         console.log("Получен ключ " + data.access_token); 
@@ -158,6 +158,7 @@ vkBridge.send('VKWebAppGetAuthToken', { app_id: 54230573, scope: 'friends,status
 </body>
 
 </html>
+
 
 
 
