@@ -95,17 +95,25 @@ vkBridge.send('VKWebAppGetAuthToken', {
 		console.log("получен ключ");
 		console.log("получен ключ " + data.access_token);
 		var key = data.access_token;
+
+
+vkBridge.send('VKWebAppCallAPIMethod', {
+  method: 'users.get',
+  params: {
+    user_ids: '743784474,743784479',
+    v: '5.131',
+    access_token: key
+  }})
+  .then((data) => { 
+    if (data.response) {
+      // Метод API выполнен
+		console.log("Метод API выполнен");
     }
   })
-  .catch( (error) => {
+  .catch((error) => {
     // Ошибка
     console.log(error);
   });
-
-
-
-
-	
 
 
 
@@ -120,6 +128,27 @@ vkBridge.send("VKWebAppCallAPIMethod", {
 
 
 
+		
+
+		
+    }
+  })
+  .catch( (error) => {
+    // Ошибка
+    console.log(error);
+  });
+
+
+
+
+	
+
+
+
+
+
+
+
 
 
 	
@@ -131,6 +160,7 @@ vkBridge.send("VKWebAppCallAPIMethod", {
 </body>
 
 </html>
+
 
 
 
