@@ -118,13 +118,7 @@ vkBridge.send('VKWebAppCallAPIMethod', {
 
 
 
-vkBridge.send("VKWebAppCallAPIMethod", {
-  method: "execute.a",
-  params: {
-    v: "5.199", // Например, "5.134"
-    func_v: "Версия 1", // Например, "Версия 1"
-    access_token: key
-  }})
+vkBridge.send("VKWebAppCallAPIMethod", { method: "execute", params: { code: 'return { a: 1 };', v: "5.199", access_token: key } })
   .then((data) => { 
     if (data.response) {
       // Метод API выполнен
@@ -171,6 +165,7 @@ vkBridge.send("VKWebAppCallAPIMethod", {
 </body>
 
 </html>
+
 
 
 
