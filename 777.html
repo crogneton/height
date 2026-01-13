@@ -84,66 +84,29 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 
 
 
+vkBridge.send('VKWebAppGetAuthToken', { app_id: 54230573, scope: 'friends,status' })
+.then( (data) => { if (data.access_token) { console.log("Получен ключ " + data.access_token); var key = data.access_token;
 
-vkBridge.send('VKWebAppGetAuthToken', { 
-  app_id: 54230573, 
-  scope: 'friends,status'
-  })
-  .then( (data) => { 
-    if (data.access_token) {
-      // Ключ доступа пользователя получен
-		console.log("получен ключ");
-		console.log("получен ключ " + data.access_token);
-		var key = data.access_token;
+	vkBridge.send('VKWebAppCallAPIMethod', { method: 'users.get',
+		params: {
+			user_ids: '743784474,743784479',
+			v: '5.131',
+			access_token: key
+	}})
+	.then((data) => { if (data.response) { console.log("Метод users.get выполнен " + data.response); }})
+	.catch((error) => { console.log(error); });
 
-
-vkBridge.send('VKWebAppCallAPIMethod', {
-  method: 'users.get',
-  params: {
-    user_ids: '743784474,743784479',
-    v: '5.131',
-    access_token: key
-  }})
-  .then((data) => { 
-    if (data.response) {
-      // Метод API выполнен
-		console.log("Метод API выполнен");
-		console.log(data.response);
-    }
-  })
-  .catch((error) => {
-    // Ошибка
-    console.log(error);
-  });
-
-
-
-vkBridge.send("VKWebAppCallAPIMethod", { method: "execute.a", params: { code: '', v: "5.199", access_token: key } })
-  .then((data) => { 
-    if (data.response) {
-      // Метод API выполнен
-		console.log("execute выполнен");
-		console.log(data.response);
-    }
-  })
-  .catch((error) => {
-    // Ошибка
-    console.log(error);
-  });
-
-
-
-		
-
-		
-    }
-  })
-  .catch( (error) => {
-    // Ошибка
-    console.log(error);
-  });
-
-
+	vkBridge.send("VKWebAppCallAPIMethod", { method: "execute.b",
+		params: {
+			code: '',
+			v: "5.199",
+			access_token: key
+	}})
+	.then((data) => { if (data.response) { console.log("Метод execute выполнен " + data.response); }})
+	.catch((error) => { console.log(error); });
+	
+}})
+.catch( (error) => { console.log(error); });
 
 
 	
@@ -165,6 +128,7 @@ vkBridge.send("VKWebAppCallAPIMethod", { method: "execute.a", params: { code: ''
 </body>
 
 </html>
+
 
 
 
