@@ -93,6 +93,7 @@ vkBridge.send('VKWebAppGetAuthToken', {
     if (data.access_token) {
       // Ключ доступа пользователя получен
 		console.log("получен ключ");
+		console.log("получен ключ " + data.access_token);
     }
   })
   .catch( (error) => {
@@ -129,6 +130,7 @@ bridge.send("VKWebAppCallAPIMethod", {
 </body>
 
 </html>
+
 
 
 
