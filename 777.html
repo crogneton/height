@@ -71,6 +71,28 @@ VK.Observer.subscribe("widgets.comments.new_comment", function(num, last_comment
 
 
 
+bridge.send('VKWebAppGetAuthToken', { 
+  app_id: 54230573, 
+  scope: 'friends,status'
+  })
+  .then( (data) => { 
+    if (data.access_token) {
+      // Ключ доступа пользователя получен
+		console.log("получен ключ");
+    }
+  })
+  .catch( (error) => {
+    // Ошибка
+    console.log(error);
+  });
+
+
+
+
+	
+
+
+/*
 bridge.send("VKWebAppCallAPIMethod", {
   method: "execute.a",
   params: {
@@ -79,7 +101,7 @@ bridge.send("VKWebAppCallAPIMethod", {
     access_token: "КЛЮЧ-ДОСТУПА"
   }
 });
-
+*/
 
 
 
@@ -93,6 +115,7 @@ bridge.send("VKWebAppCallAPIMethod", {
 </body>
 
 </html>
+
 
 
 
