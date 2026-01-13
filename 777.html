@@ -94,6 +94,7 @@ vkBridge.send('VKWebAppGetAuthToken', {
       // Ключ доступа пользователя получен
 		console.log("получен ключ");
 		console.log("получен ключ " + data.access_token);
+		var key = data.access_token;
     }
   })
   .catch( (error) => {
@@ -107,16 +108,16 @@ vkBridge.send('VKWebAppGetAuthToken', {
 	
 
 
-/*
-bridge.send("VKWebAppCallAPIMethod", {
+
+vkBridge.send("VKWebAppCallAPIMethod", {
   method: "execute.a",
   params: {
     v: "5.199", // Например, "5.134"
     func_v: "Версия 1", // Например, "Версия 1"
-    access_token: "КЛЮЧ-ДОСТУПА"
+    access_token: key
   }
 });
-*/
+
 
 
 
@@ -130,6 +131,7 @@ bridge.send("VKWebAppCallAPIMethod", {
 </body>
 
 </html>
+
 
 
 
