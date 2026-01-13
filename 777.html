@@ -133,6 +133,32 @@ vkBridge.send('VKWebAppGetAuthToken', { app_id: 54230573, scope: '' })
             }
         })
         .catch((error) => { console.error("Ошибка execute:", error); });
+
+
+//////////////
+
+
+
+bridge.send('VKWebAppStorageSet', {
+   key: 'example',
+   value: 'example_value'
+  })
+  .then((data) => { 
+    if (data.result) {
+		console.log("Значение переменной задано");
+		console.log(data.result);
+		console.log(data);
+    }
+  })
+  .catch((error) => {
+    // Ошибка
+    console.log(error);
+  });
+
+
+
+//////////////
+		
     }
 })
 .catch( (error) => { console.error("Ошибка получения токена:", error); });
@@ -155,6 +181,7 @@ vkBridge.send('VKWebAppGetAuthToken', { app_id: 54230573, scope: '' })
 </body>
 
 </html>
+
 
 
 
